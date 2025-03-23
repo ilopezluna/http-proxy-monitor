@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTTP Proxy Monitor</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>HTTP Proxy Monitor</h1>
+        <div class="controls">
+          <div class="search-container">
+            <input
+              type="text"
+              id="search-input"
+              placeholder="Search requests..."
+            />
+            <button id="clear-search">Clear</button>
+          </div>
+          <div class="filter-container">
+            <select id="method-filter">
+              <option value="">All Methods</option>
+              <option value="GET">GET</option>
+              <option value="POST">POST</option>
+              <option value="PUT">PUT</option>
+              <option value="DELETE">DELETE</option>
+              <option value="PATCH">PATCH</option>
+            </select>
+            <select id="status-filter">
+              <option value="">All Status</option>
+              <option value="2">2xx (Success)</option>
+              <option value="3">3xx (Redirect)</option>
+              <option value="4">4xx (Client Error)</option>
+              <option value="5">5xx (Server Error)</option>
+            </select>
+            <button id="clear-history">Clear History</button>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <div class="request-list-container">
+          <h2>Requests</h2>
+          <div id="request-list" class="request-list"></div>
+        </div>
+
+        <div class="request-details-container">
+          <div id="request-details" class="request-details">
+            <div class="empty-state">
+              <p>Select a request to view details</p>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer>
+        <p>HTTP Proxy Monitor &copy; 2025</p>
+      </footer>
+    </div>
+
+    <!-- Templates -->
+    <template id="request-item-template">
+      <div class="request-item">
+        <div class="request-method"></div>
+        <div class="request-info">
+          <div class="request-url"></div>
+          <div class="request-meta">
+            <span class="request-status"></span>
+            <span class="request-time"></span>
+            <span class="request-duration"></span>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <template id="request-details-template">
+      <div class="details-container">
+        <div class="details-header">
+          <h3 class="details-title"></h3>
+          <div class="details-meta">
+            <span class="details-time"></span>
+            <span class="details-duration"></span>
+          </div>
+        </div>
+
+        <div class="tabs">
+          <button class="tab-button active" data-tab="request">Request</button>
+          <button class="tab-button" data-tab="response">Response</button>
+        </div>
+
+        <div class="tab-content">
+          <div class="tab-pane active" id="request-pane">
+            <div class="details-section">
+              <h4>General</h4>
+              <div class="details-item">
+                <span class="details-label">Method:</span>
+                <span class="details-method"></span>
+              </div>
+              <div class="details-item">
+                <span class="details-label">URL:</span>
+                <span class="details-url"></span>
+              </div>
+            </div>
+
+            <div class="details-section">
+              <h4>Headers</h4>
+              <div class="details-headers request-headers"></div>
+            </div>
+
+            <div class="details-section">
+              <h4>Body</h4>
+              <pre class="details-body request-body"></pre>
+            </div>
+          </div>
+
+          <div class="tab-pane" id="response-pane">
+            <div class="details-section">
+              <h4>General</h4>
+              <div class="details-item">
+                <span class="details-label">Status:</span>
+                <span class="details-status"></span>
+              </div>
+            </div>
+
+            <div class="details-section">
+              <h4>Headers</h4>
+              <div class="details-headers response-headers"></div>
+            </div>
+
+            <div class="details-section">
+              <h4>Body</h4>
+              <pre class="details-body response-body"></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>

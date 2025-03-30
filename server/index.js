@@ -245,3 +245,26 @@ uiServer.listen(UI_PORT, () => {
   console.log(`UI server listening on port ${UI_PORT}`)
   console.log(`Open http://localhost:${UI_PORT} to view the UI`)
 })
+
+// Handle graceful shutdown
+const shutdown = async () => {
+  console.log('Shutting down gracefully...')
+  
+  // Close Socket.IO connections
+  await new Promise(resolve => io.close(resolve))
+  console.log('Socket.IO server closed')
+  
+  // Close HTTP servers
+  await new Promise(resolve => uiServer.close(resolve))
+  console.log('UI server closed')
+  
+  await new Promise(resolve => proxyServer.close(resolve))
+  console.log('Proxy server closed')
+  
+  console.log('All servers closed, exiting process')
+  process.exit(0)
+}
+
+// Listen for termination signals
+process.on('SIGINT', shutdown)
+process.on('SIGTERM', shutdown)
